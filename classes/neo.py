@@ -76,6 +76,7 @@ class neo:
 
     def get(self, path, referer = None):
         time.sleep(random.uniform(self.minDelay, self.maxDelay))
+        self.s.cookies.update({'DSR': '5mRAvyjkjZ4hn/iKVJK4Ufzv1YYF2bbKVyybhygPrb9vt6NMfWymnXZKYWQyUK6RmaMvstfvN/SOi9EGUy1XPQ==', 'DCSS': '0CF518183F341E81ECE361F10086837B59B60F9', 'DGCC': 'mh'})
         if referer:
             self.s.headers.update({'Referer': referer})
         url = self.url(path)
@@ -95,4 +96,12 @@ class neo:
             r = self.s.post(url)
         if 'Referer' in self.s.headers:
             del self.s.headers['Referer']
+        return r.text
+
+    def amf(self, data, referer = None):
+        self.s.headers.clear()
+        self.s.headers.update({'Accept': '*/*', 'Accept-Encoding': 'gzip, deflate', 'Accept-Language': 'en-us,en;q=0.5', 'User-Agent': self.useragent, 'Referer': referer, 'Content-Origin': 'http://images.neopets.com', 'Host': 'www.neopets.com', 'Origin': 'http://images.neopets.com', 'Content-Type': 'application/x-amf', 'X-Requested-With': 'ShockwaveFlash/24.0.0.186'})
+        r = self.s.post('http://www.neopets.com/amfphp/gateway.php', data=data)
+        self.s.headers.clear()
+        self.setHeaders()
         return r.text
